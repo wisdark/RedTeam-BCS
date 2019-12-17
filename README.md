@@ -1,5 +1,16 @@
 # RED TEAM 
-## 基础架构设计 
+> Powered by QAX A-TEAM
+
+## Summary
+
+![image](https://github.com/Mel0day/RedTeam-BCS/blob/master/summary.jpeg)
+
+## 情报收集与外网打点
+
+因为起晚了..第一个议题没听着，有点遗憾，补张图
+![image](https://github.com/Mel0day/RedTeam-BCS/blob/master/search.jpeg)
+
+## 基础设施架构设计部署 
 
 普通架构：红队人员--》teamserver cs--》目标机
 缺点：功能未分离、无潜伏通道、回连日志多、灵活性较低
@@ -9,8 +20,10 @@ tips：1~2cpu 2G内存 10G硬盘，回连数不超过5台，潜伏通道（根�
 
 完整架构： 域名和IP（VPS）teamserver（CS）前置机（redictor）
 CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
+![image](https://github.com/Mel0day/RedTeam-BCS/blob/master/arch-design.jpeg)
 
 * 选择域名
+![image](https://github.com/Mel0day/RedTeam-BCS/blob/master/15663532496100.jpg)
     * 抢注过期域名 expireddomains.net  DELETE DOMAIN
     * tips1: 不要包含世界大厂和杀毒厂商相关的域名，以及和目标相关的域名
     * tips2：注册目标相关区域常见的域名，记得开隐私保护
@@ -61,7 +74,29 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
             * tips：good domain + bad domain 包一层同时发过去
     * 第三方服务用作C2
         * Office365、Pastebin、Slack、Facebook、Dropbox、Gmail、Twitter..
-        * 需要硬编码到第三方服务
+        * 缺点：需要硬编码到第三方服务
+        * 第三方服务用作C2相关资源汇总
+https://pentestarmoury.com/2017/07/19/s3-buckets-for-good-and-evil/
+https://rhinosecuritylabs.com/aws/hiding-cloudcobalt-strike-beacon-c2-using-amazon-apis/
+https://github.com/daniel-infosec/wikipedia-c2
+https://unit42.paloaltonetworks.com/aggah-campaign-bit-ly-blogspot-and-pastebin-used-for-c2-in-large-scale-campaign
+https://www.harmj0y.net/blog/powershell/command-and-control-using-active-directory/
+https://blog.netspi.com/databases-and-clouds-sql-server-as-a-c2/
+https://outflank.nl/blog/2017/09/17/blogpost-cobalt-strike-over-external-c2-beacon-home-in-the-most-obscure-ways
+https://labs.mwrinfosecurity.com/blog/tasking-office-365-for-cobalt-strike-c2
+https://github.com/maldevel/canisrufus
+https://unit42.paloaltonetworks.com/darkhydrus-delivers-new-trojan-that-can-use-google-drive-for-c2-communications
+https://github.com/byt3bl33d3r/gcat
+https://github.com/maldevel/gdog
+https://www.welivesecurity.com/wp-content/uploads/2019/05/ESET-LightNeuron.pdf
+https://github.com/bkup/SlackShell
+https://github.com/j3ssie/c2s
+https://github.com/praetorian-code/slack-c2bot
+https://github.com/microsoft/skype-dev-bots
+https://github.com/PaulSec/twittor
+https://blog.talosintelligence.com/2017/04/introducing-rokrat.html
+https://www2.fireeye.com/rs/848-DID-242/images/rpt-apt29-hammertoss.pdf
+https://github.com/woj-ciech/Social-media-c2
 
 * 邮件钓鱼（SMTP）
     * 域名：同C2域名选择
@@ -70,7 +105,7 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
     * SSL证书
     * 发送时间和频率
     * 一键部署
-    * 钓鱼邮件框架：Gophish
+    * 钓鱼邮件框架：Gophish (https://github.com/gophish/gophish)
 
 * 隐蔽性和安全性
     * 权限最小化：使用iptalbes限定组件通讯，SSH进行端口转发
@@ -79,11 +114,11 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
         * 解决方案：V2ray + Nginx + CLoudflare + Freenom+ Websocket 搭建代理
 * 基础设施监控系统
     * 记录完整日志，设置告警
-    * 自动化
+    * 自动化部署 LuWu（https://github.com/QAX-A-Team/LuWu）
     * 日志中心
 
     
-## 邮件钓鱼
+## 邮件钓鱼之前期信息收集与侦查
 * 面临的技术挑战：
     * 邮件网关 mail gateway
     * 浏览器
@@ -106,6 +141,8 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
             * 收件人超过5000个
     * BYPASS ANTI-MALWARE
     * NDR
+* 总结
+![image](https://github.com/Mel0day/RedTeam-BCS/blob/master/RTsteps.jpeg)
 
 ## 钓鱼样本制作
 * 钓鱼邮件类型
@@ -194,7 +231,7 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
                 * nltest 提取域控信息的过程
                 * net
                 * dsquery 通过对LDAP进行查询
-            * dsquery/ADSISearcher使用铭文的LDAP协议，容易被IDS捕获
+            * dsquery/ADSISearcher使用明文的LDAP协议，容易被IDS捕获
     * 定位域控（域外主机）
         * DNS排查
             * Scan UDP/53
@@ -322,3 +359,5 @@ CS -》teamservers 1/2/3/... 前置层（SMTP/PAYLOAD/C2/隐蔽C2）
             * 修改宏关联文件，对抗依赖文件名or类型检测
 
 ## 实战案例
+   略
+   
